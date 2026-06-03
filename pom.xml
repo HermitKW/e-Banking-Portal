@@ -148,6 +148,20 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<!-- Failsafe runs *IT integration tests (Testcontainers) in the verify phase,
+				     keeping the Surefire unit tests (*Test) fast and Docker-free. -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

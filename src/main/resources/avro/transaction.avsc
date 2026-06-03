@@ -1,0 +1,14 @@
+{
+  "type": "record",
+  "name": "Transaction",
+  "namespace": "com.e_bank.transaction_api.avro",
+  "doc": "Contract for the Kafka 'transactions' value. Wire format is JSON; this schema is used to test backward/forward compatibility.",
+  "fields": [
+    { "name": "id", "type": "string", "doc": "Transaction id (also the Kafka key)." },
+    { "name": "amountMinorUnits", "type": "long", "doc": "Signed minor units: negative = debit, positive = credit." },
+    { "name": "currency", "type": "string", "doc": "ISO 4217 code." },
+    { "name": "iban", "type": "string", "doc": "Account IBAN." },
+    { "name": "valueDate", "type": "string", "doc": "ISO-8601 date (YYYY-MM-DD)." },
+    { "name": "description", "type": "string", "default": "", "doc": "Free text; defaulted for evolution." }
+  ]
+}
