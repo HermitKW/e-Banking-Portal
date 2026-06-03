@@ -17,3 +17,8 @@ app:
     accounts:
       "P-0123456789":
         - "CH93-0000-0000-0000-0000-0"
+  fx:
+    base-url: ${FX_BASE_URL:http://localhost:8081}
+    connect-timeout: 2s
+    read-timeout: 2s
+    cache-ttl: 5m
