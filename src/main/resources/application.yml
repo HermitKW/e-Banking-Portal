@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: transaction-api
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: ${KAFKA_GROUP_ID:transaction-api}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+app:
+  kafka:
+    transactions-topic: ${TRANSACTIONS_TOPIC:transactions}
+  ownership:
+    # Demo stub for the core Account Service (customer -> owned IBANs).
+    accounts:
+      "P-0123456789":
+        - "CH93-0000-0000-0000-0000-0"
