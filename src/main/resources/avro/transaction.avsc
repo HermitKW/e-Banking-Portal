@@ -2,38 +2,13 @@
   "type": "record",
   "name": "Transaction",
   "namespace": "com.e_bank.transaction_api.avro",
-  "doc": "Canonical contract for the Kafka 'transactions' topic value (record key = transaction id). The wire format is JSON; this Avro schema is the source-of-truth contract used to enforce and test backward/forward schema compatibility (see the schema-compatibility test). v1 — base attributes from the assessment.",
+  "doc": "Contract for the Kafka 'transactions' value. Wire format is JSON; this schema is used to test backward/forward compatibility.",
   "fields": [
-    {
-      "name": "id",
-      "type": "string",
-      "doc": "Unique transaction identifier (also the Kafka record key)."
-    },
-    {
-      "name": "amountMinorUnits",
-      "type": "long",
-      "doc": "Signed amount in ISO 4217 minor units. Negative = debit, positive = credit."
-    },
-    {
-      "name": "currency",
-      "type": "string",
-      "doc": "ISO 4217 currency code, e.g. GBP, CHF, EUR."
-    },
-    {
-      "name": "iban",
-      "type": "string",
-      "doc": "Account IBAN; the link to customer ownership (resolved at query time)."
-    },
-    {
-      "name": "valueDate",
-      "type": "string",
-      "doc": "Value date, ISO-8601 (YYYY-MM-DD)."
-    },
-    {
-      "name": "description",
-      "type": "string",
-      "default": "",
-      "doc": "Free-text description. Has a default so it may be omitted by older producers."
-    }
+    { "name": "id", "type": "string", "doc": "Transaction id (also the Kafka key)." },
+    { "name": "amountMinorUnits", "type": "long", "doc": "Signed minor units: negative = debit, positive = credit." },
+    { "name": "currency", "type": "string", "doc": "ISO 4217 code." },
+    { "name": "iban", "type": "string", "doc": "Account IBAN." },
+    { "name": "valueDate", "type": "string", "doc": "ISO-8601 date (YYYY-MM-DD)." },
+    { "name": "description", "type": "string", "default": "", "doc": "Free text; defaulted for evolution." }
   ]
 }
