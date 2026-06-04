@@ -14,9 +14,12 @@ app:
     transactions-topic: ${TRANSACTIONS_TOPIC:transactions}
   ownership:
     # Demo stub for the core Account Service (customer -> owned IBANs).
+    # P-0123456789 holds three accounts in different currencies (per the brief's assumption).
     accounts:
       "P-0123456789":
-        - "CH93-0000-0000-0000-0000-0"
+        - "GB29-0000-0000-0000-0001"    # GBP account
+        - "DE89-0000-0000-0000-0002"    # EUR account
+        - "CH93-0000-0000-0000-0000-0"  # CHF account
   fx:
     base-url: ${FX_BASE_URL:http://localhost:8081}
     connect-timeout: 2s
