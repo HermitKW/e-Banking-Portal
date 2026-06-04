@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "name": "Transaction",
+  "namespace": "com.e_bank.transaction_api.avro",
+  "doc": "v2 — adds nullable customerId (resolved at ingestion). Demonstrates backward/forward-compatible evolution.",
+  "fields": [
+    { "name": "id", "type": "string" },
+    { "name": "amountMinorUnits", "type": "long" },
+    { "name": "currency", "type": "string" },
+    { "name": "iban", "type": "string" },
+    { "name": "valueDate", "type": "string" },
+    { "name": "description", "type": "string", "default": "" },
+    { "name": "customerId", "type": ["null", "string"], "default": null }
+  ]
+}

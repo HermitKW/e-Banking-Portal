@@ -1,8 +1,8 @@
 # CircleCI pipeline for the Transaction API.
 #
-# Stage 1: unit tests only (Surefire / *Test) — fast and Docker-free.
-# Stage 5 adds an `integration-tests` job on a `machine` executor (Docker available)
-# running `./mvnw -B verify` for the Testcontainers integration tests (*IT).
+# - unit-tests:        fast, Docker-free (Surefire / *Test) on a JDK 21 image.
+# - integration-tests: machine executor (real Docker) for Testcontainers + WireMock
+#                       integration tests (Failsafe / *IT) via `mvnw verify`.
 version: 2.1
 
 jobs:
@@ -29,7 +29,39 @@ jobs:
       - store_artifacts:
           path: target/surefire-reports
 
+  integration-tests:
+    machine:
+      image: ubuntu-2404:current
+    steps:
+      - checkout
+      - run:
+          name: Install JDK 21
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y openjdk-21-jdk
+            echo 'export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64' >> "$BASH_ENV"
+      - restore_cache:
+          keys:
+            - m2-{{ checksum "pom.xml" }}
+            - m2-
+      - run:
+          name: Run unit + integration tests (Testcontainers + WireMock)
+          command: |
+            chmod +x ./mvnw
+            ./mvnw -B clean verify
+      - save_cache:
+          key: m2-{{ checksum "pom.xml" }}
+          paths:
+            - ~/.m2
+      - store_test_results:
+          path: target/failsafe-reports
+      - store_artifacts:
+          path: target/failsafe-reports
+
 workflows:
   build-and-test:
     jobs:
       - unit-tests
+      - integration-tests:
+          requires:
+            - unit-tests
