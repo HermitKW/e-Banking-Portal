@@ -22,3 +22,8 @@ app:
     connect-timeout: 2s
     read-timeout: 2s
     cache-ttl: 5m
+  security:
+    # JWKS endpoint of the e-Banking IdP; keys are fetched lazily on first token.
+    jwk-set-uri: ${JWT_JWK_SET_URI:http://localhost:9000/.well-known/jwks.json}
+    issuer: ${JWT_ISSUER:}
+    audience: ${JWT_AUDIENCE:transaction-api}

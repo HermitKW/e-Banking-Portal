@@ -3,9 +3,12 @@ package com.e_bank.transaction_api.api;
 import com.e_bank.transaction_api.api.dto.PageSummary;
 import com.e_bank.transaction_api.api.dto.TransactionPageResponse;
 import com.e_bank.transaction_api.query.TransactionQueryService;
+import com.e_bank.transaction_api.security.SecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -23,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TransactionController.class)
+@Import(SecurityConfig.class)
 class TransactionControllerTest {
 
     @Autowired
@@ -30,6 +34,9 @@ class TransactionControllerTest {
 
     @MockitoBean
     TransactionQueryService queryService;
+
+    @MockitoBean
+    JwtDecoder jwtDecoder; // satisfies the resource-server chain; real decoding is bypassed by jwt()
 
     @Test
     void returnsPageForAuthenticatedCustomer() throws Exception {
@@ -46,5 +53,13 @@ class TransactionControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.targetCurrency").value("CHF"))
                 .andExpect(jsonPath("$.pageTotals.totalCredit").value("110.00"));
+    }
+
+    @Test
+    void rejectsUnauthenticatedRequest() throws Exception {
+        mockMvc.perform(get("/api/v1/transactions")
+                        .param("yearMonth", "2020-10")
+                        .param("targetCurrency", "CHF"))
+                .andExpect(status().isUnauthorized());
     }
 }
