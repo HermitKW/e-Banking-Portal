@@ -1,0 +1,44 @@
+# =============================================================================
+# DOCUMENTED PRODUCTION TARGET — NOT used by this POC.
+#
+# The current service uses an in-memory read model, so its Deployment is
+# stateless and needs no PersistentVolume (state is rebuilt from Kafka on
+# restart). When the read model evolves to a Kafka Streams + RocksDB state
+# store (see README "Decisions & trade-offs"), the workload becomes stateful:
+# each pod owns a partition of the store on local disk, so it runs as a
+# StatefulSet with a per-pod PersistentVolumeClaim. The PVC lets a restarted
+# pod restore from disk + changelog instead of replaying the whole topic.
+#
+# This file is illustrative — apply it only with the Streams implementation.
+# =============================================================================
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: transaction-api
+spec:
+  serviceName: transaction-api-headless   # stable network IDs for inter-instance query routing
+  replicas: 3
+  selector:
+    matchLabels:
+      app: transaction-api
+  template:
+    metadata:
+      labels:
+        app: transaction-api
+    spec:
+      containers:
+        - name: transaction-api
+          image: transaction-api:0.0.1-SNAPSHOT
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: state-store
+              mountPath: /var/lib/kafka-streams   # RocksDB state-store directory
+  volumeClaimTemplates:
+    - metadata:
+        name: state-store
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 20Gi
