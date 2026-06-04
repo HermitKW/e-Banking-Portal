@@ -51,3 +51,14 @@ logging:
   structured:
     format:
       console: ecs
+
+---
+# Live FX rates from the Frankfurter API (ECB). Activate with SPRING_PROFILES_ACTIVE=real-fx.
+spring:
+  config:
+    activate:
+      on-profile: real-fx
+app:
+  fx:
+    base-url: https://api.frankfurter.dev
+    read-timeout: 5s

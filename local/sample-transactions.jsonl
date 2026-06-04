@@ -1,2 +1,2 @@
-{"id":"t1","amountMinorUnits":10000,"currency":"GBP","iban":"CH93-0000-0000-0000-0000-0","valueDate":"2020-10-01","description":"salary"}
-{"id":"t2","amountMinorUnits":-5000,"currency":"GBP","iban":"CH93-0000-0000-0000-0000-0","valueDate":"2020-10-02","description":"rent"}
+{"id":"89d3a179-abcd-465b-a9ee-e2d5f60f1d46","amountMinorUnits":10000,"currency":"GBP","iban":"CH93-0000-0000-0000-0000-0","valueDate":"2020-10-01","description":"Salary"}
+{"id":"7c1f2e34-5678-49ab-bc12-3456789abcde","amountMinorUnits":-5000,"currency":"GBP","iban":"CH93-0000-0000-0000-0000-0","valueDate":"2020-10-02","description":"Online payment CHF"}
