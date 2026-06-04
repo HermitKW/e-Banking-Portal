@@ -39,9 +39,11 @@ class TransactionApiIT {
     @BeforeAll
     static void startFx() {
         FX.start();
+        // The stub only matches when the X-API-Key header is present, proving the client sends it.
         FX.stubFor(WireMock.get(WireMock.urlPathEqualTo("/rate"))
                 .withQueryParam("from", WireMock.equalTo("GBP"))
                 .withQueryParam("to", WireMock.equalTo("CHF"))
+                .withHeader("X-API-Key", WireMock.equalTo("test-key"))
                 .willReturn(WireMock.okJson("{\"from\":\"GBP\",\"to\":\"CHF\",\"rate\":1.10}")));
     }
 
@@ -53,6 +55,7 @@ class TransactionApiIT {
     @DynamicPropertySource
     static void properties(DynamicPropertyRegistry registry) {
         registry.add("app.fx.base-url", FX::baseUrl);
+        registry.add("app.fx.api-key", () -> "test-key");
         registry.add("spring.kafka.producer.key-serializer",
                 () -> "org.apache.kafka.common.serialization.StringSerializer");
         registry.add("spring.kafka.producer.value-serializer",

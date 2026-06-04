@@ -1,0 +1,13 @@
+# Non-secret configuration. Bound to the app's ${ENV:default} placeholders via envFrom.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: transaction-api-config
+data:
+  SPRING_PROFILES_ACTIVE: "k8s"            # enables structured (ECS JSON) logging
+  KAFKA_BOOTSTRAP_SERVERS: "kafka-bootstrap:9092"
+  TRANSACTIONS_TOPIC: "transactions"
+  FX_BASE_URL: "http://fx-provider:8080"
+  JWT_JWK_SET_URI: "https://idp.example.com/.well-known/jwks.json"
+  JWT_ISSUER: "https://idp.example.com"
+  JWT_AUDIENCE: "transaction-api"
