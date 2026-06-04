@@ -52,6 +52,14 @@ class InMemoryTransactionStoreTest {
     }
 
     @Test
+    void ignoresDuplicateTransactionIds() {
+        var store = new InMemoryTransactionStore();
+        store.add(tx("a", "IBAN1", "2020-10-05"));
+        store.add(tx("a", "IBAN1", "2020-10-05")); // at-least-once redelivery of the same id
+        assertEquals(1, store.findByIbansAndMonth(Set.of("IBAN1"), YearMonth.of(2020, 10)).size());
+    }
+
+    @Test
     void returnedListIsImmutable() {
         var store = new InMemoryTransactionStore();
         store.add(tx("a", "IBAN1", "2020-10-05"));
