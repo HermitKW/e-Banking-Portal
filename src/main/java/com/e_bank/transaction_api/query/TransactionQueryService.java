@@ -54,6 +54,9 @@ public class TransactionQueryService {
         BigDecimal totalDebit = BigDecimal.ZERO.setScale(scale);
         List<TransactionDto> dtos = new ArrayList<>(pageItems.size());
         for (Transaction tx : pageItems) {
+            // getRate() is Caffeine-cached, so repeated calls for the same currency pair are
+            // in-memory lookups (no network I/O). Pre-fetching distinct currencies would trim
+            // even that overhead for large pages, but is unnecessary at this scale.
             BigDecimal rate = exchangeRateProvider.getRate(tx.currency(), targetCurrency);
             BigDecimal converted = CurrencyConverter.convert(tx.amount().toDecimal(), rate, target);
             dtos.add(TransactionDto.from(tx, converted));
