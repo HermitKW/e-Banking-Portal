@@ -21,8 +21,10 @@ public class ExchangeRateClient implements ExchangeRateProvider {
     private final Cache<String, BigDecimal> cache;
     private final CircuitBreaker circuitBreaker;
     private final Retry retry;
+    private final String apiKey;
 
     public ExchangeRateClient(ExchangeRateProperties properties) {
+        this.apiKey = properties.apiKey();
         this.restClient = RestClient.builder()
                 .baseUrl(properties.baseUrl())
                 .requestFactory(requestFactory(properties))
@@ -58,13 +60,15 @@ public class ExchangeRateClient implements ExchangeRateProvider {
     }
 
     private BigDecimal fetch(String from, String to) {
-        FxRateResponse response = restClient.get()
+        RestClient.RequestHeadersSpec<?> request = restClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/rate")
                         .queryParam("from", from)
                         .queryParam("to", to)
-                        .build())
-                .retrieve()
-                .body(FxRateResponse.class);
+                        .build());
+        if (apiKey != null && !apiKey.isBlank()) {
+            request = request.header("X-API-Key", apiKey);
+        }
+        FxRateResponse response = request.retrieve().body(FxRateResponse.class);
         if (response == null || response.rate() == null) {
             throw new IllegalStateException("Empty FX response for %s->%s".formatted(from, to));
         }
