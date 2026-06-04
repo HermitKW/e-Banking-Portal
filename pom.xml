@@ -227,6 +227,11 @@
 				     keeping the Surefire unit tests (*Test) fast and Docker-free. -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<!-- Keep the non-JUnit summary out of failsafe-reports so CI test-result
+					     upload (which expects JUnit XML) doesn't choke on it. -->
+					<summaryFile>${project.build.directory}/failsafe-summary.xml</summaryFile>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
