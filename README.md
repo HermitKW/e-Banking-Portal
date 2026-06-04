@@ -216,6 +216,9 @@ proves a v2 schema (adds a nullable `customerId`) is **backward and forward comp
 - **Metrics:** Micrometer + `/actuator/prometheus`.
 - **Logging:** structured **ECS JSON** logs under the `k8s` profile (plain text locally); the JSON
   deserializer redacts payload content on parse errors, so malformed messages don't leak PII.
+- **Exposure (prod hardening):** `/actuator/prometheus` and `/actuator/info` are open here for
+  convenience; in production they'd be restricted to the monitoring network (e.g. a Kubernetes
+  `NetworkPolicy`), not public — metrics can reveal internal class/dependency details.
 
 ## 10. Testing
 
@@ -273,6 +276,10 @@ Each call is framed as *works here / breaks there / path forward*. The headline 
   lookup + inter-instance RPC (documented, not shipped).
 - Ownership + FX providers are stubs/configurable; production wires the real Account Service and FX
   provider (the FX API key already lives in a K8s `Secret`).
+- **`seenIds` (idempotency) grows unbounded** — every transaction id ever seen. Production
+  mitigation: a bounded LRU cache (Caffeine), or rely on Kafka exactly-once + an idempotent producer.
+- **Malformed payloads are logged and skipped** with no recovery path. Production: route them to a
+  **dead-letter topic** (e.g. `transactions.DLT`) for offline inspection and reprocessing.
 
 ## 14. Project structure
 

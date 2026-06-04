@@ -25,6 +25,7 @@ public class InMemoryTransactionStore implements TransactionStore {
     // IBAN -> its transactions. Concurrent map; per-IBAN lists are snapshotted under lock for reads.
     private final Map<String, List<Transaction>> byIban = new ConcurrentHashMap<>();
     // Transaction ids already ingested, for idempotent (at-least-once safe) ingestion.
+    // POC: grows unbounded; production would bound it (LRU) or rely on Kafka exactly-once.
     private final Set<String> seenIds = ConcurrentHashMap.newKeySet();
 
     @Override
