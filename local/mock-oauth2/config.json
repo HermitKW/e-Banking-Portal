@@ -1,0 +1,19 @@
+{
+  "interactiveLogin": true,
+  "tokenCallbacks": [
+    {
+      "issuerId": "default",
+      "tokenExpiry": 3600,
+      "requestMappings": [
+        {
+          "requestParam": "scope",
+          "match": "transactions",
+          "claims": {
+            "sub": "P-0123456789",
+            "aud": ["transaction-api"]
+          }
+        }
+      ]
+    }
+  ]
+}

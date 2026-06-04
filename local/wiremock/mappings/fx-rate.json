@@ -1,0 +1,11 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPath": "/rate"
+  },
+  "response": {
+    "status": 200,
+    "headers": { "Content-Type": "application/json" },
+    "jsonBody": { "from": "GBP", "to": "CHF", "rate": 1.10 }
+  }
+}
