@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Local-only Docker Compose overrides (e.g. profile/debug toggles) ###
+docker-compose.override.yml
+
+### Personal presentation notes (not part of the deliverable) ###
+docs/DECISIONS.md
