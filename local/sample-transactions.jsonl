@@ -1,2 +1,6 @@
-{"id":"89d3a179-abcd-465b-a9ee-e2d5f60f1d46","amountMinorUnits":10000,"currency":"GBP","iban":"CH93-0000-0000-0000-0000-0","valueDate":"2020-10-01","description":"Salary"}
-{"id":"7c1f2e34-5678-49ab-bc12-3456789abcde","amountMinorUnits":-5000,"currency":"GBP","iban":"CH93-0000-0000-0000-0000-0","valueDate":"2020-10-02","description":"Online payment CHF"}
+{"id":"3f2a9c10-7b4e-4d2a-9f01-0a1b2c3d4e01","amountMinorUnits":10000,"currency":"GBP","iban":"GB29-0000-0000-0000-0001","valueDate":"2020-10-01","description":"Salary"}
+{"id":"3f2a9c10-7b4e-4d2a-9f01-0a1b2c3d4e02","amountMinorUnits":-5000,"currency":"GBP","iban":"GB29-0000-0000-0000-0001","valueDate":"2020-10-02","description":"Online payment"}
+{"id":"5c8b1d22-9a3f-4e6b-8c12-1b2c3d4e5f03","amountMinorUnits":20000,"currency":"EUR","iban":"DE89-0000-0000-0000-0002","valueDate":"2020-10-03","description":"Refund"}
+{"id":"5c8b1d22-9a3f-4e6b-8c12-1b2c3d4e5f04","amountMinorUnits":-3000,"currency":"EUR","iban":"DE89-0000-0000-0000-0002","valueDate":"2020-10-05","description":"Subscription"}
+{"id":"7e9d3f44-2b1c-4a8d-9e23-2c3d4e5f6a05","amountMinorUnits":7500,"currency":"CHF","iban":"CH93-0000-0000-0000-0000-0","valueDate":"2020-10-04","description":"Interest"}
+{"id":"7e9d3f44-2b1c-4a8d-9e23-2c3d4e5f6a06","amountMinorUnits":-2500,"currency":"CHF","iban":"CH93-0000-0000-0000-0000-0","valueDate":"2020-10-06","description":"ATM withdrawal"}
