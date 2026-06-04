@@ -48,20 +48,24 @@ stub) lives in [`docker-compose.yml`](docker-compose.yml). Full instructions:
 **[`local/README.md`](local/README.md)**; reproducible scenarios with expected outputs:
 **[`local/TEST-CASES.md`](local/TEST-CASES.md)**.
 
-```bash
-docker compose up -d --build              # default = stub FX profile
-# wait until healthy, then seed sample data:
+```powershell
+# 1) start the stack (default = stub FX profile), then wait until healthy
+docker compose up -d --build
+
+# 2) seed sample data
 docker cp local/sample-transactions.jsonl kafka:/tmp/seed.jsonl
 docker compose exec -T kafka sh -c '/opt/kafka/bin/kafka-console-producer.sh --bootstrap-server kafka:9092 --topic transactions < /tmp/seed.jsonl'
+
+# 3) get a token
+$token = (Invoke-RestMethod -Method Post "http://localhost:8090/default/token" -Body @{
+  grant_type="client_credentials"; client_id="demo"; client_secret="demo"; scope="transactions" }).access_token
+
+# 4) call the API
+Invoke-RestMethod "http://localhost:8080/api/v1/transactions?yearMonth=2020-10&targetCurrency=CHF" `
+  -Headers @{ Authorization = "Bearer $token" } | ConvertTo-Json -Depth 6
 ```
 
-Get a token and call the API:
-```bash
-TOKEN=$(curl -s -X POST http://localhost:8090/default/token \
-  -d "grant_type=client_credentials&client_id=demo&client_secret=demo&scope=transactions" | jq -r .access_token)
-curl -s -H "Authorization: Bearer $TOKEN" \
-  "http://localhost:8080/api/v1/transactions?yearMonth=2020-10&targetCurrency=CHF" | jq
-```
+> macOS/Linux (bash + `curl`/`jq`) equivalents are in [`local/README.md`](local/README.md).
 
 - **Swagger UI:** http://localhost:8080/swagger-ui.html (Authorize → paste the token → Try it out)
 - **Live FX rates:** start with `APP_PROFILE=real-fx` to use the live Frankfurter (ECB) provider
