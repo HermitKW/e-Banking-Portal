@@ -123,13 +123,13 @@ sequenceDiagram
     participant St as Store
     participant FX as FX client
     C->>S: GET /api/v1/transactions (Bearer JWT)
-    S->>S: validate signature / exp / issuer / audience
-    S->>Ctrl: authenticated; principal = sub claim
+    S->>S: validate signature, exp, issuer, audience
+    S->>Ctrl: authenticated (principal = sub claim)
     Ctrl->>Q: getTransactions(customerId, month, target, page, size)
     Q->>O: owned IBANs for customerId
-    Q->>St: findByIbansAndMonth(ibans, month)  // ordered, idempotent
+    Q->>St: findByIbansAndMonth(ibans, month)
     loop per source currency
-        Q->>FX: getRate(source → target)  // cached, fail-closed
+        Q->>FX: getRate(source to target)
     end
     Q-->>Ctrl: page + per-page credit/debit totals
     Ctrl-->>C: 200 application/json
