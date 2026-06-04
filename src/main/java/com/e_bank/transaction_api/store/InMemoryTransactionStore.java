@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -23,9 +24,16 @@ public class InMemoryTransactionStore implements TransactionStore {
 
     // IBAN -> its transactions. Concurrent map; per-IBAN lists are snapshotted under lock for reads.
     private final Map<String, List<Transaction>> byIban = new ConcurrentHashMap<>();
+    // Transaction ids already ingested, for idempotent (at-least-once safe) ingestion.
+    private final Set<String> seenIds = ConcurrentHashMap.newKeySet();
 
     @Override
     public void add(Transaction transaction) {
+        // Kafka delivers at-least-once, so a transaction can be redelivered. Ignore ids we have
+        // already stored (idempotent, first-write-wins) to avoid double-counting.
+        if (!seenIds.add(transaction.id())) {
+            return;
+        }
         byIban.computeIfAbsent(transaction.iban(), k -> Collections.synchronizedList(new ArrayList<>()))
                 .add(transaction);
     }
