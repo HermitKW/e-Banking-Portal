@@ -44,6 +44,11 @@ management:
         enabled: true
       show-details: never
 
+# Correlation id (X-Request-Id) appears in every log line; structured logs include it as a field.
+logging:
+  pattern:
+    level: "%5p [req:%X{requestId:-}]"
+
 ---
 # Container profile: emit structured (ECS JSON) logs for log aggregation.
 spring:

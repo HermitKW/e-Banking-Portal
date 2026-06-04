@@ -216,9 +216,19 @@ proves a v2 schema (adds a nullable `customerId`) is **backward and forward comp
 - **Metrics:** Micrometer + `/actuator/prometheus`.
 - **Logging:** structured **ECS JSON** logs under the `k8s` profile (plain text locally); the JSON
   deserializer redacts payload content on parse errors, so malformed messages don't leak PII.
+- **Correlation id:** a filter stamps an `X-Request-Id` (from the header or generated) into the MDC
+  and the response, so it appears on every log line and ties a response back to its logs.
+- **Error logging:** the exception handler logs failures — `5xx` (e.g. FX unavailable, unexpected)
+  at `ERROR` with the stack, `4xx` at `DEBUG` — so a metric spike always has a matching log line.
 - **Exposure (prod hardening):** `/actuator/prometheus` and `/actuator/info` are open here for
   convenience; in production they'd be restricted to the monitoring network (e.g. a Kubernetes
   `NetworkPolicy`), not public — metrics can reveal internal class/dependency details.
+
+**In production** the pieces fit together as: structured JSON logs → shipped to a central store
+(ELK / Loki / CloudWatch via Fluent Bit) and searched by `X-Request-Id`; Prometheus scrapes
+`/actuator/prometheus` → Grafana dashboards + Alertmanager rules on HTTP 5xx rate, p99 latency,
+Kafka consumer lag and JVM pressure. Next steps: distributed tracing (Micrometer Tracing +
+OpenTelemetry) and `resilience4j-micrometer` to expose circuit-breaker state as metrics.
 
 ## 10. Testing
 
