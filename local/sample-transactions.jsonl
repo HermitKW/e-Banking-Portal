@@ -1,0 +1,2 @@
+{"id":"t1","amountMinorUnits":10000,"currency":"GBP","iban":"CH93-0000-0000-0000-0000-0","valueDate":"2020-10-01","description":"salary"}
+{"id":"t2","amountMinorUnits":-5000,"currency":"GBP","iban":"CH93-0000-0000-0000-0000-0","valueDate":"2020-10-02","description":"rent"}
