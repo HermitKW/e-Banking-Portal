@@ -48,19 +48,22 @@ http://localhost:8080/swagger-ui.html — **Authorize**, paste the token, "Try i
 
 ## 5. (Optional) live FX rates
 By default the FX provider is the WireMock stub (fixed rate 1.10). To use **live ECB
-rates** from [Frankfurter](https://frankfurter.dev), run the app with the `real-fx`
-profile — add an override and rebuild:
-```yaml
-# docker-compose.override.yml
-services:
-  app:
-    environment:
-      SPRING_PROFILES_ACTIVE: "real-fx"
+rates** from [Frankfurter](https://frankfurter.dev), start the app with the `real-fx`
+profile via the `APP_PROFILE` variable — **no rebuild needed** (the profile is a runtime
+setting, not baked into the image):
+```powershell
+# PowerShell
+$env:APP_PROFILE="real-fx"; docker compose up -d app
 ```
 ```bash
-docker compose up -d --build app
+# bash
+APP_PROFILE=real-fx docker compose up -d app
 ```
-Now totals use the current GBP→CHF rate (e.g. 1.0614 → 106.14 / -53.07). Tests and CI
+Back to the stub:
+```bash
+docker compose up -d app        # APP_PROFILE unset → default profile
+```
+Totals then use the current rate (e.g. GBP→CHF 1.0614 → 106.14 / -53.07). Tests and CI
 always use the stub, so they stay deterministic.
 
 ## Tear down
