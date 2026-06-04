@@ -12,7 +12,9 @@ class TestcontainersConfiguration {
 	@Bean
 	@ServiceConnection
 	KafkaContainer kafkaContainer() {
-		return new KafkaContainer(DockerImageName.parse("apache/kafka-native:latest"));
+		// JVM-based Apache Kafka image, pinned. The kafka-native (GraalVM) image segfaults
+		// on some CI container runtimes (e.g. CircleCI machine executors).
+		return new KafkaContainer(DockerImageName.parse("apache/kafka:3.8.1"));
 	}
 
 }
