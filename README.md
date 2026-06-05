@@ -110,8 +110,8 @@ flowchart TB
     end
     kafka --> consumer --> store
     sec --> ctrl --> qry
-    qry --> own
     qry --> store
+    qry --> own
     qry --> fxc --> fxext
 ```
 
