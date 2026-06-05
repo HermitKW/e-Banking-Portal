@@ -103,7 +103,7 @@ flowchart TB
         sec["Security filter chain<br/>OAuth2 Resource Server"]
         ctrl["TransactionController<br/>/api/v1/transactions"]
         qry["TransactionQueryService<br/>paginate + per-page FX totals"]
-        own["AccountOwnershipService<br/>customer → owned IBANs (stub)"]
+        own["AccountOwnershipService<br/>customer -> owned IBANs (stub)"]
         store["InMemoryTransactionStore<br/>port: TransactionStore"]
         consumer["TransactionConsumer<br/>@KafkaListener (JSON)"]
         fxc["ExchangeRateClient<br/>RestClient + Resilience4j + Caffeine"]
@@ -180,7 +180,7 @@ Authorization: Bearer <JWT>
   "page": 0, "size": 50, "totalElements": 6, "totalPages": 1,
   "pageTotals": { "totalCredit": "405.00", "totalDebit": "-113.00", "currency": "CHF" },
   "transactions": [
-    { "id": "…", "amount": "100.00", "currency": "GBP", "amountInTargetCurrency": "110.00",
+    { "id": "3f2a9c10-7b4e-4d2a-9f01-0a1b2c3d4e01", "amount": "100.00", "currency": "GBP", "amountInTargetCurrency": "110.00",
       "iban": "GB29-0000-0000-0000-0001", "valueDate": "2020-10-01", "type": "CREDIT", "description": "Salary" }
   ]
 }
