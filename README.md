@@ -220,6 +220,9 @@ proves a v2 schema (adds a nullable `customerId`) is **backward and forward comp
 - **Metrics:** Micrometer + `/actuator/prometheus`.
 - **Logging:** structured **ECS JSON** logs under the `k8s` profile (plain text locally); the JSON
   deserializer redacts payload content on parse errors, so malformed messages don't leak PII.
+- **Where the logs go:** the app logs to **stdout** (12-factor) — there is **no log file**. View them
+  with `docker compose logs app` locally or `kubectl logs deploy/transaction-api` in Kubernetes; in
+  production the platform ships stdout to the central store (see below).
 - **Correlation id:** a filter stamps an `X-Request-Id` (from the header or generated) into the MDC
   and the response, so it appears on every log line and ties a response back to its logs.
 - **Error logging:** the exception handler logs failures — `5xx` (e.g. FX unavailable, unexpected)
@@ -247,6 +250,10 @@ A full pyramid, all run by CI:
 
 CircleCI runs a fast **unit-tests** job and a **integration-tests** job (machine executor for
 Testcontainers). Pipeline: https://app.circleci.com/pipelines/github/HermitKW/e-Banking-Portal
+
+Reproducible manual/reviewer scenarios — pagination, multi-currency FX (incl. same-currency = 1.0),
+empty month, auth and validation — with their **expected request/response values** are in
+**[`local/TEST-CASES.md`](local/TEST-CASES.md)**.
 
 ## 11. Deployment
 
