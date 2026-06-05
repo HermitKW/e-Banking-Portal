@@ -141,9 +141,9 @@ sequenceDiagram
 
 ## 4. How the requirements are met
 
-| Brief focus area | Implementation |
+| Focus area | Implementation |
 |---|---|
-| **API modeling (OpenAPI)** | springdoc-openapi 3.x → `/v3/api-docs` + Swagger UI; bearer-JWT security scheme |
+| **API modeling (OpenAPI)** | springdoc-openapi 3.0.3 → `/v3/api-docs` + Swagger UI; bearer-JWT security scheme |
 | **Security (authn/authz)** | OAuth2 Resource Server: JWT signature (JWKS) + expiry + issuer + audience; principal = `sub`; ownership-based authorization (§7) |
 | **Data access** | In-memory read model behind a `TransactionStore` port; IBAN-keyed; idempotent ingestion; **schema evolution** via Avro compatibility test (§8) |
 | **Logging & monitoring** | Actuator liveness/readiness probes, Prometheus metrics, structured ECS JSON logs (§9) |
@@ -153,7 +153,7 @@ sequenceDiagram
 
 ## 5. Data model & money
 
-A transaction (the brief's attributes): **id**, **amount + currency**, **IBAN**, **value date**,
+A transaction (attributes): **id**, **amount + currency**, **IBAN**, **value date**,
 **description**. There is deliberately no `customerId` on the event — ownership is resolved from
 the IBAN at query time.
 
@@ -265,7 +265,7 @@ Testcontainers). Pipeline: https://app.circleci.com/pipelines/github/HermitKW/e-
 Each call is framed as *works here / breaks there / path forward*. The headline ones:
 
 - **Read model = in-memory store, not Kafka Streams/RocksDB.** Works at assessment scale and keeps
-  CI deterministic; documented to *not* hold the brief's 10-year / ~24-billion-record volume. Path
+  CI deterministic; documented to *not* hold 10-year / ~24-billion-record volume. Path
   forward: a Streams + RocksDB state store behind the same port, with hot/cold tiering (rolling hot
   window in RocksDB, older months from a cold path).
 - **Ownership resolved at query time** (customer → IBANs) rather than enriched at ingestion. Keeps
@@ -281,7 +281,7 @@ Each call is framed as *works here / breaks there / path forward*. The headline 
 - **Why no Spring Data / external DB:** the Kafka-native read model *is* the data-access layer — a
   deliberate CQRS choice (no second datastore to operate), documented as the trade-off above.
 - **Boot-4 specifics:** Jackson 3 (`tools.jackson`), renamed starters, `RestClient` over WebClient
-  (no reactive stack), Resilience4j used programmatically, springdoc 3.x, Spring Cloud 2025.1.x.
+  (no reactive stack), Resilience4j used programmatically, springdoc 3.0.3, Spring Cloud 2025.1.1.
 
 ## 13. Limitations & next steps
 
