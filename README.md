@@ -220,7 +220,7 @@ proves a v2 schema (adds a nullable `customerId`) is **backward and forward comp
 - **Metrics:** Micrometer + `/actuator/prometheus`.
 - **Logging:** structured **ECS JSON** logs under the `k8s` profile (plain text locally); the JSON
   deserializer redacts payload content on parse errors, so malformed messages don't leak PII.
-- **Where the logs go:** the app logs to **stdout** (12-factor) — there is **no log file**. View them
+- **Logs file:** the app logs to **stdout**. View them
   with `docker compose logs app` locally or `kubectl logs deploy/transaction-api` in Kubernetes; in
   production the platform ships stdout to the central store (see below).
 - **Correlation id:** a filter stamps an `X-Request-Id` (from the header or generated) into the MDC
